@@ -4,7 +4,10 @@ from .models import Cart,Order
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-def addToCart(request,pk):
+# Create your views here.
+
+@login_required
+def add_to_cart(request,pk):
     item = get_object_or_404(Product, pk=pk)
     order_item = Cart.objects.get_or_create(item=item,user=request.user, purchased=False)
     order_qs = Order.objects.filter(user=request.user, orderd = False)
@@ -26,7 +29,8 @@ def addToCart(request,pk):
         messages.success(request,'Add Product To Cart Successfully')
         return redirect('store')
 
-def cartView(request):
+@login_required
+def cart_view(request):
     carts = Cart.objects.filter(user=request.user, purchased=False)
     orders = Order.objects.filter(user=request.user, orderd=False)
     if carts.exists() and orders.exists():
@@ -36,7 +40,8 @@ def cartView(request):
         messages.warning(request,"You don't have any item in your cart")
         return redirect('store')
 
-def itemRemove(request,pk):
+@login_required
+def item_remove(request,pk):
     item = get_object_or_404(Product,pk=pk)
     order_qs = Order.objects.filter(user= request.user, orderd=False)
     if order_qs.exists():
@@ -54,7 +59,8 @@ def itemRemove(request,pk):
         messages.warning(request,'Your item was not in order')
         return redirect('store')
 
-def itemIncrease(request,pk):
+@login_required
+def item_increase(request,pk):
     item = get_object_or_404(Product,pk=pk)
     order_qs = Order.objects.filter(user= request.user, orderd=False)
     if order_qs.exists():
@@ -73,7 +79,8 @@ def itemIncrease(request,pk):
         messages.warning(request,"Your item was not in order")
         return redirect('store')
 
-def itemDecrease(request,pk):
+@login_required
+def item_decrease(request,pk):
     item = get_object_or_404(Product,pk=pk)
     order_qs = Order.objects.filter(user= request.user, orderd=False)
     if order_qs.exists():
@@ -96,3 +103,7 @@ def itemDecrease(request,pk):
     else:
         messages.warning(request,"Your item was not in order")
         return redirect('store')
+
+def add_cart_for_signup(request):
+    messages.warning(request,"For Buying Product! Please Login or Create an Account")
+    return redirect('login')

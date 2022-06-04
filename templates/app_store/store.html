@@ -20,7 +20,7 @@
     <div class="container">
     
     <header class="section-heading">
-        <a href="./store.html" class="btn btn-outline-primary float-right">See all</a>
+        <!-- <a href="./store.html" class="btn btn-outline-primary float-right">See all</a> -->
         <h3 class="section-title">Popular products</h3>
     </header><!-- sect-heading -->
     
@@ -42,5 +42,39 @@
     </div><!-- container // -->
     </section>
     <!-- ========================= SECTION  END// ========================= -->
+
+    <!-- ========================= PAGINATION  START// ========================= -->
+    <ul class="pagination list-inline mx-auto justify-content-center fs-3 text-danger">
+        {% if products.has_previous %}
+          <li><a href="?page={{ products.previous_page_number }}" style="font-size: 25px;">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span style="font-size: 25px;">&laquo;</span></li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+          <li class="page-item {% if i == page_number %} active {% endif %}">
+            <a class="page-link" href="?page={{i}}">{{i}}</a>
+          </li>
+        {% endfor %}
+      {% if products.has_next %}
+        <li><a href="?page={{ products.next_page_number }}" style="font-size: 25px;">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span style="font-size: 25px;">&raquo;</span></li>
+      {% endif %}
+      </ul>
+    
+    
+    
+      {% for page_number in products.adjusted_elided_pages %}
+      {% if page_number == products.paginator.ELLIPSIS %}
+          {{page_number}}
+      {% else %}
+          <a
+              href="{% url 'product' page_number %}"
+              class="{% if page_number == page_obj.number %}current{% endif %}"
+          >
+              {{page_number}}
+          </a>
+      {% endif %}
+    {% endfor %}
 
 {% endblock %}

@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 
 def store(request):
     products = Product.objects.all()
-    paginator = Paginator(products,8,orphans = 1)
+    paginator = Paginator(products,1,orphans = 1)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     context = {
